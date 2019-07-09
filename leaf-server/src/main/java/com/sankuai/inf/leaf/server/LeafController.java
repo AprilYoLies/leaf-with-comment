@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class LeafController {
     private Logger logger = LoggerFactory.getLogger(LeafController.class);
-    @Autowired
-    SegmentService segmentService;
-    @Autowired
-    SnowflakeService snowflakeService;
+    private final SegmentService segmentService;
+    private final SnowflakeService snowflakeService;
+
+    public LeafController(SegmentService segmentService, SnowflakeService snowflakeService) {
+        this.segmentService = segmentService;
+        this.snowflakeService = snowflakeService;
+    }
 
     @RequestMapping(value = "/api/segment/get/{key}")
     public String getSegmentID(@PathVariable("key") String key) {

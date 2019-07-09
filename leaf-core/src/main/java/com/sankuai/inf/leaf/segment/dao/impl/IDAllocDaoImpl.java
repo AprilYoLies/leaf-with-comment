@@ -17,7 +17,7 @@ import java.util.List;
 public class IDAllocDaoImpl implements IDAllocDao {
 
     SqlSessionFactory sqlSessionFactory;
-
+    // 在构造函数中初始化 SqlSessionFactory，这是访问数据库的基础
     public IDAllocDaoImpl(DataSource dataSource) {
         TransactionFactory transactionFactory = new JdbcTransactionFactory();
         Environment environment = new Environment("development", transactionFactory, dataSource);
@@ -26,10 +26,10 @@ public class IDAllocDaoImpl implements IDAllocDao {
         sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
     }
 
-    @Override
+    @Override   // 就是从数据库中查询全部记录的指定四个字段，结果通过 List<LeafAlloc> 承载返回
     public List<LeafAlloc> getAllLeafAllocs() {
         SqlSession sqlSession = sqlSessionFactory.openSession(false);
-        try {
+        try {   // 执行的是 SELECT biz_tag, max_id, step, update_time FROM leaf_alloc
             return sqlSession.selectList("com.sankuai.inf.leaf.segment.dao.IDAllocMapper.getAllLeafAllocs");
         } finally {
             sqlSession.close();

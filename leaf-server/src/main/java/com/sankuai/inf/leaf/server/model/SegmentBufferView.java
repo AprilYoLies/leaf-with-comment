@@ -1,5 +1,8 @@
 package com.sankuai.inf.leaf.server.model;
 
+/**
+ *  buffer segment 的视图对象，可以理解为 pojo
+ */
 public class SegmentBufferView {
     private String key;
     private long value0;
