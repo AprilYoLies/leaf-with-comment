@@ -6,6 +6,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * 用于加载配置文件，将其解析成 Properties
+ */
 public class PropertyFactory {
     private static final Logger logger = LoggerFactory.getLogger(PropertyFactory.class);
     private static final Properties prop = new Properties();

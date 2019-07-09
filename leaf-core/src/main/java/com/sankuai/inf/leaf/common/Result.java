@@ -1,5 +1,8 @@
 package com.sankuai.inf.leaf.common;
 
+/**
+ * 用于承载结果，主要包含 id 和 status 两个信息
+ */
 public class Result {
     private long id;
     private Status status;
