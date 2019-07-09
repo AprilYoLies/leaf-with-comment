@@ -36,11 +36,12 @@ public class IDAllocDaoImpl implements IDAllocDao {
         }
     }
 
-    @Override
+    @Override   // 就是将数据库中 tag 对应的项的 max_id 修改为 max_id + step 值，然后将这一条结果查出来，用 LeafAlloc 封装后返回
     public LeafAlloc updateMaxIdAndGetLeafAlloc(String tag) {
         SqlSession sqlSession = sqlSessionFactory.openSession();
-        try {
+        try {   // 执行的是 UPDATE leaf_alloc SET max_id = max_id + step WHERE biz_tag = #{tag}
             sqlSession.update("com.sankuai.inf.leaf.segment.dao.IDAllocMapper.updateMaxId", tag);
+            // 执行的是 SELECT biz_tag, max_id, step FROM leaf_alloc WHERE biz_tag = #{tag}
             LeafAlloc result = sqlSession.selectOne("com.sankuai.inf.leaf.segment.dao.IDAllocMapper.getLeafAlloc", tag);
             sqlSession.commit();
             return result;
@@ -49,11 +50,12 @@ public class IDAllocDaoImpl implements IDAllocDao {
         }
     }
 
-    @Override
+    @Override   // 根据新计算出来的步长来更新 max id，然后将当前这条更新的数据查出来
     public LeafAlloc updateMaxIdByCustomStepAndGetLeafAlloc(LeafAlloc leafAlloc) {
         SqlSession sqlSession = sqlSessionFactory.openSession();
-        try {
+        try {   // 执行这条语句 UPDATE leaf_alloc SET max_id = max_id + #{step} WHERE biz_tag = #{key}
             sqlSession.update("com.sankuai.inf.leaf.segment.dao.IDAllocMapper.updateMaxIdByCustomStep", leafAlloc);
+            // 执行这条 SELECT biz_tag, max_id, step, update_time FROM leaf_alloc
             LeafAlloc result = sqlSession.selectOne("com.sankuai.inf.leaf.segment.dao.IDAllocMapper.getLeafAlloc", leafAlloc.getKey());
             sqlSession.commit();
             return result;
@@ -62,10 +64,10 @@ public class IDAllocDaoImpl implements IDAllocDao {
         }
     }
 
-    @Override
+    @Override   // 从数据库中查询所有的 biz_tag 字段的值
     public List<String> getAllTags() {
         SqlSession sqlSession = sqlSessionFactory.openSession(false);
-        try {
+        try {   // 执行的是 SELECT biz_tag FROM leaf_alloc
             return sqlSession.selectList("com.sankuai.inf.leaf.segment.dao.IDAllocMapper.getAllTags");
         } finally {
             sqlSession.close();

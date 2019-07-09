@@ -21,8 +21,8 @@ public class SegmentService {
     private Logger logger = LoggerFactory.getLogger(SegmentService.class);
     IDGen idGen;
     DruidDataSource dataSource;
-    public SegmentService() throws SQLException, InitException {
-        Properties properties = PropertyFactory.getProperties();
+    public SegmentService() throws SQLException, InitException {    // 根据配置文件来决定是初始化 ZeroIDGen，还是 SegmentIDGenImpl，如果是后者，就
+        Properties properties = PropertyFactory.getProperties();    // 初始化 dataSource，构建 SegmentIDGenImpl 并初始化（主要是完成了从数据库中获取全部的 biz-tag 信息再更新缓存的过程，另外启动了一个每分钟从数据库更新缓存的任务）
         boolean flag = Boolean.parseBoolean(properties.getProperty(Constants.LEAF_SEGMENT_ENABLE, "true"));
         if (flag) {
 
@@ -40,7 +40,7 @@ public class SegmentService {
             // Config ID Gen
             idGen = new SegmentIDGenImpl();
             ((SegmentIDGenImpl) idGen).setDao(dao);
-            if (idGen.init()) {
+            if (idGen.init()) { // 初始化，主要是完成了从数据库中获取全部的 biz-tag 信息再更新缓存的过程，另外启动了一个每分钟从数据库更新缓存的任务
                 logger.info("Segment Service Init Successfully");
             } else {
                 throw new InitException("Segment Service Init Fail");
@@ -49,9 +49,9 @@ public class SegmentService {
             idGen = new ZeroIDGen();
             logger.info("Zero ID Gen Service Init Successfully");
         }
-    }
+    }   // 通过 idGen 获取 id
     public Result getId(String key) {
-        return idGen.get(key);
+        return idGen.get(key);  // 通过 idGen 获取 id
     }
     public SegmentIDGenImpl getIdGen() {
         if (idGen instanceof SegmentIDGenImpl) {

@@ -21,14 +21,14 @@ public class SegmentBuffer {
     private volatile int step;
     private volatile int minStep;
     private volatile long updateTimestamp;
-
+    // 构建了持有的两个内部 Segment，完成了相关参数的初始化
     public SegmentBuffer() {
-        segments = new Segment[]{new Segment(this), new Segment(this)};
-        currentPos = 0;
-        nextReady = false;
-        initOk = false;
-        threadRunning = new AtomicBoolean(false);
-        lock = new ReentrantReadWriteLock();
+        segments = new Segment[]{new Segment(this), new Segment(this)}; // 一个 SegmentBuffer 持有两个 Segment，代表两个 id 字段
+        currentPos = 0; // 当前 Segment 的 pos
+        nextReady = false;  // 标志位，用于标志下一个 Segment 是否准备就绪
+        initOk = false; // 初始化的标志
+        threadRunning = new AtomicBoolean(false);   // 这应该是线程启动的标志（该线程应该是用来获取备用 Segment 的）
+        lock = new ReentrantReadWriteLock();    // 可冲入的读写锁
     }
 
     public String getKey() {
@@ -42,7 +42,7 @@ public class SegmentBuffer {
     public Segment[] getSegments() {
         return segments;
     }
-
+    // 获取当前使用的 Segment
     public Segment getCurrent() {
         return segments[currentPos];
     }
@@ -50,11 +50,11 @@ public class SegmentBuffer {
     public int getCurrentPos() {
         return currentPos;
     }
-
+    // 计算另外一个 pos 的索引
     public int nextPos() {
         return (currentPos + 1) % 2;
     }
-
+    // 切换到另外一个 segment 的 pos
     public void switchPos() {
         currentPos = nextPos();
     }
@@ -66,7 +66,7 @@ public class SegmentBuffer {
     public void setInitOk(boolean initOk) {
         this.initOk = initOk;
     }
-
+    // 查看下一个 segment 是否准备就绪
     public boolean isNextReady() {
         return nextReady;
     }

@@ -39,7 +39,7 @@ public class Segment {
     public SegmentBuffer getBuffer() {
         return buffer;
     }
-
+    // 查看还剩余多少个 id 可以用
     public long getIdle() {
         return this.getMax() - getValue().get();
     }
